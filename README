@@ -3,5 +3,8 @@
 　-- http://www.cs.princeton.edu/~rs/strings/
 　-- 文字列の配列を(通常のクイックソートよりも)高速にソート可能
 
+[使用例等]
+- http://d.hatena.ne.jp/sile/20101002
+
 [TODO]
 - コード整理
