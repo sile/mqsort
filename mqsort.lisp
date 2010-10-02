@@ -95,27 +95,25 @@
         (values (+ beg (- ls-end ls-beg))
                 (- end (- gt-end gt-beg)))))))
 
-(defun sv-sort-impl (vec beg end depth &aux (len (- end beg)))
+(defun sv-sort-impl (ary beg end depth &aux (len (- end beg)))
   (declare #.*fastest*
            (array-index beg end depth))
   (if (<= len 2)
-      (if (<= len 1)
-          vec
-        (swap-if-greater vec beg (1+ beg) depth))
-    (multiple-value-bind (eql-beg eql-end) (partition vec beg end depth)
-      (sv-sort-impl vec beg eql-beg depth)
-      (when (< depth (length (sref vec eql-beg)))
-        (sv-sort-impl vec eql-beg eql-end (1+ depth)))
-      (sv-sort-impl vec eql-end end depth))))
+      (if (= len 2)
+          (swap-if-greater ary beg (1+ beg) depth)
+        ary)
+    (multiple-value-bind (eql-beg eql-end) (partition ary beg end depth)
+      (sv-sort-impl ary beg eql-beg depth)
+      (when (< depth (length (sref ary eql-beg)))
+        (sv-sort-impl ary eql-beg eql-end (1+ depth)))
+      (sv-sort-impl ary eql-end end depth))))
 
-(defun sv-sort(vec)
-  (sv-sort-impl vec 0 (length vec) 0))
+(defun sv-sort(ary)
+  (sv-sort-impl ary 0 (length ary) 0))
 
-(defun sort (vector)
+(defun sort (str-array)
   (declare #.*interface*
-           (vector vector))
-  (etypecase vector
-    (simple-vector (sv-sort vector))
-    (vector        (muffle (sv-sort (coerce vector 'simple-vector))))))
-
-
+           (vector str-array))
+  (etypecase str-array
+    (simple-vector (sv-sort str-array))
+    (vector        (muffle (sv-sort (coerce str-array 'simple-vector))))))
